@@ -6,6 +6,8 @@ from matplotlib.animation import FuncAnimation
 import tkinter as tk
 import random
 
+from numpy.lib.function_base import angle
+
 x_data=[1,4,5,2,5,7,5,2,4,6]
 y_data=[2,5,1,3,5,4,1,3,6,2]
 x_line=[0,0,0]
@@ -24,6 +26,17 @@ def set_label():
     label9['text'] = "x:" + str(x_data[8]) + " "+ "y:" + str(y_data[8])
     label10['text'] = "x:" + str(x_data[9]) + " "+ "y:" + str(y_data[9])
 
+def rotate_laser(angle,frame):
+    #dx = laser_x[0][1] - x_data[frame]
+    #dy = laser_y[0][1] - y_data[frame]
+    dx = laser_x[0][1] - 4
+    dy = laser_y[0][1] -4
+
+    #laser_rotate[0] = dx* numpy.cos(angle) - dy * numpy.sin(angle) + x_data[frame]
+    #laser_rotate[1] = dx * numpy.sin(angle) + dy * numpy.cos(angle) + y_data[frame]
+
+    laser_rotate[0] = dx* numpy.cos(angle) - dy * numpy.sin(angle) + 4
+    laser_rotate[1] = dx * numpy.sin(angle) + dy * numpy.cos(angle) + 4    
 
 #graph config 
 def set_ax():
@@ -43,12 +56,40 @@ def update(frame):
         x_line.pop(0)
         y_line.pop(0)
 
-    print(x_line,"frame:",frame)
-    print(y_line,"frame:",frame)
+    #print(x_line,"frame:",frame)
+    #print(y_line,"frame:",frame)
+
+    #laser_x[0][0] = x_data[frame]
+    #laser_x[0][1] = x_data[frame]
+
+    #laser_y[0][0] = y_data[frame]
+    #laser_y[0][1] = y_data[frame]+5
+    
+    laser_x[0][0] = 4
+    laser_x[0][1] = 4
+
+    laser_y[0][0] = 4
+    laser_y[0][1] = 6
+    
+
+    rotate_laser(cangle[frame],frame)
+
+
     ax.cla()
     set_ax()
-    ax.plot(x_data[frame],y_data[frame],"v")
-    ax.plot(x_line,y_line)
+    #ax.plot(x_data[frame],y_data[frame],marker=(3,0,180 + cangle[frame]),markersize=50)
+    #ax.plot(x_line,y_line)
+    
+    plotlaser_x = [laser_x[0][0],laser_rotate[0]]
+    plotlaser_y = [laser_y[0][0],laser_rotate[1]]
+
+    print(laser_rotate)
+    print(cangle[frame])
+    print('\n')
+
+
+    ax.plot(plotlaser_x,plotlaser_y)
+
 
     if frame == 9:
         for i in range(10):
@@ -67,6 +108,20 @@ root = tk.Tk()
 fig = plt.figure(figsize=(8,8))
 ax = fig.add_subplot(111)
 ax.set_aspect('equal',adjustable='box')
+
+
+#range of center to laser
+rcl = [] * 10
+#[laser current x position,  laser end x position]
+laser_x= [[0]*2 for i in range(10)] 
+#[laser current  y position,  laser end y position]
+laser_y= [[0]*2 for i in range(10)] 
+#laser length
+laser_length = [] * 10
+
+laser_rotate = [0] * 2
+
+cangle = [0,30,60,90,120,150.180,210,240,270,300]
 
 canvas = FigureCanvasTkAgg(fig, master=root)
 canvas.get_tk_widget().pack(side='left')
@@ -97,7 +152,7 @@ set_label()
 
 
 
-ani = FuncAnimation(fig,update,frames=10,interval=100)
+ani = FuncAnimation(fig,update,frames=10,interval=2000)
 
 button = tk.Button(master=root,
                    text="NIT SUZUKA",
