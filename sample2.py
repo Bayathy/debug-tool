@@ -27,16 +27,25 @@ def set_label():
     label10['text'] = "x:" + str(x_data[9]) + " "+ "y:" + str(y_data[9])
 
 def rotate_laser(angle,frame):
+    for i in range(10):
+        dx = laser_x[i][1] - 4 + rcl[i]
+        dy = laser_y[i][1] - 4
+       
+        laser_replace[i][0] = rcl[i] * numpy.cos(angle * numpy.pi/180)
+        laser_replace[i][1] = rcl[i] * numpy.sin(angle * numpy.pi/180)
+
+        #laser_x[i][0] += laser_replace[i][0] 
+        
+
+        laser_rotate[i][0] = dx * numpy.cos(angle * numpy.pi/180) - dy * numpy.sin(angle * numpy.pi/180) + 4
+        laser_rotate[i][1] = dx * numpy.sin(angle * numpy.pi/180) + dy * numpy.cos(angle * numpy.pi/180) + 4
+
     #dx = laser_x[0][1] - x_data[frame]
     #dy = laser_y[0][1] - y_data[frame]
-    dx = laser_x[0][1] - 4
-    dy = laser_y[0][1] -4
 
     #laser_rotate[0] = dx* numpy.cos(angle) - dy * numpy.sin(angle) + x_data[frame]
     #laser_rotate[1] = dx * numpy.sin(angle) + dy * numpy.cos(angle) + y_data[frame]
-
-    laser_rotate[0] = dx* numpy.cos(angle) - dy * numpy.sin(angle) + 4
-    laser_rotate[1] = dx * numpy.sin(angle) + dy * numpy.cos(angle) + 4    
+   
 
 #graph config 
 def set_ax():
@@ -64,13 +73,10 @@ def update(frame):
 
     #laser_y[0][0] = y_data[frame]
     #laser_y[0][1] = y_data[frame]+5
-    
-    laser_x[0][0] = 4
-    laser_x[0][1] = 4
+    for i in range(10):   
+        laser_x[i] = [4  + rcl[i],4]
+        laser_y[i] = [4,6]
 
-    laser_y[0][0] = 4
-    laser_y[0][1] = 6
-    
 
     rotate_laser(cangle[frame],frame)
 
@@ -78,17 +84,13 @@ def update(frame):
     ax.cla()
     set_ax()
     #ax.plot(x_data[frame],y_data[frame],marker=(3,0,180 + cangle[frame]),markersize=50)
-    #ax.plot(x_line,y_line)
-    
-    plotlaser_x = [laser_x[0][0],laser_rotate[0]]
-    plotlaser_y = [laser_y[0][0],laser_rotate[1]]
+    ax.plot(4,4,marker=(3,0,180 + cangle[frame]),markersize=50)
+    ax.plot(x_line,y_line)
+    for i in range(10):
+        plotlaser_x = [laser_x[i][0],laser_rotate[i][0]]
+        plotlaser_y = [laser_y[i][0],laser_rotate[i][1]]
 
-    print(laser_rotate)
-    print(cangle[frame])
-    print('\n')
-
-
-    ax.plot(plotlaser_x,plotlaser_y)
+        ax.plot(plotlaser_x,plotlaser_y)
 
 
     if frame == 9:
@@ -111,7 +113,7 @@ ax.set_aspect('equal',adjustable='box')
 
 
 #range of center to laser
-rcl = [] * 10
+rcl = [-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5]
 #[laser current x position,  laser end x position]
 laser_x= [[0]*2 for i in range(10)] 
 #[laser current  y position,  laser end y position]
@@ -119,7 +121,9 @@ laser_y= [[0]*2 for i in range(10)]
 #laser length
 laser_length = [] * 10
 
-laser_rotate = [0] * 2
+laser_rotate = [[0] * 2 for i in range(10)]
+
+laser_replace = [[0] * 2 for i in range(10)]
 
 cangle = [0,30,60,90,120,150.180,210,240,270,300]
 
