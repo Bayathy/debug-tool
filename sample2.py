@@ -31,8 +31,8 @@ def rotate_laser(angle,frame):
         dx = laser_x[i][1] - 4 
         dy = laser_y[i][1] - 4
        
-        laser_replace[i][0] = rcl[i] * numpy.cos(angle * numpy.pi/180)
-        laser_replace[i][1] = rcl[i] * numpy.sin(angle * numpy.pi/180)
+        laser_replace[i][0] = rcl[i] * numpy.cos(angle * numpy.pi/180) - 0.2 * numpy.sin(angle * numpy.pi/180) 
+        laser_replace[i][1] = rcl[i] * numpy.sin(angle * numpy.pi/180) + 0.2 * numpy.cos(angle * numpy.pi/180) 
 
         laser_rotate[i][0] = dx * numpy.cos(angle * numpy.pi/180) - dy * numpy.sin(angle * numpy.pi/180) + 4 
         laser_rotate[i][1] = dx * numpy.sin(angle * numpy.pi/180) + dy * numpy.cos(angle * numpy.pi/180) + 4
@@ -113,7 +113,7 @@ ax.set_aspect('equal',adjustable='box')
 
 
 #range of center to laser
-rcl = [-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5]
+rcl = [-0.25,-0.20,-0.15,-0.10,-0.05,0.05,0.10,0.15,0.20,0.25]
 #[laser current x position,  laser end x position]
 laser_x= [[0]*2 for i in range(10)] 
 #[laser current  y position,  laser end y position]
@@ -125,7 +125,7 @@ laser_rotate = [[0] * 2 for i in range(10)]
 
 laser_replace = [[0] * 2 for i in range(10)]
 
-cangle = [30,60,90,120,150.180,210,240,270,300,330]
+cangle = [0,30,60,90,120,150.180,210,240,270,300,330]
 
 canvas = FigureCanvasTkAgg(fig, master=root)
 canvas.get_tk_widget().pack(side='left')
@@ -156,7 +156,7 @@ set_label()
 
 
 
-ani = FuncAnimation(fig,update,frames=10,interval=2000)
+ani = FuncAnimation(fig,update,frames=10,interval=5000)
 
 button = tk.Button(master=root,
                    text="NIT SUZUKA",
