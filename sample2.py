@@ -28,16 +28,13 @@ def set_label():
 
 def rotate_laser(angle,frame):
     for i in range(10):
-        dx = laser_x[i][1] - 4 + rcl[i]
+        dx = laser_x[i][1] - 4 
         dy = laser_y[i][1] - 4
        
         laser_replace[i][0] = rcl[i] * numpy.cos(angle * numpy.pi/180)
         laser_replace[i][1] = rcl[i] * numpy.sin(angle * numpy.pi/180)
 
-        #laser_x[i][0] += laser_replace[i][0] 
-        
-
-        laser_rotate[i][0] = dx * numpy.cos(angle * numpy.pi/180) - dy * numpy.sin(angle * numpy.pi/180) + 4
+        laser_rotate[i][0] = dx * numpy.cos(angle * numpy.pi/180) - dy * numpy.sin(angle * numpy.pi/180) + 4 
         laser_rotate[i][1] = dx * numpy.sin(angle * numpy.pi/180) + dy * numpy.cos(angle * numpy.pi/180) + 4
 
     #dx = laser_x[0][1] - x_data[frame]
@@ -58,7 +55,6 @@ def update(frame):
         x_line.pop(0)
         y_line.pop(0)
     
-
     x_line.append(x_data[frame])
     y_line.append(y_data[frame])
     if len(x_line) > 3:
@@ -74,12 +70,10 @@ def update(frame):
     #laser_y[0][0] = y_data[frame]
     #laser_y[0][1] = y_data[frame]+5
     for i in range(10):   
-        laser_x[i] = [4  + rcl[i],4]
+        laser_x[i] = [4,4]
         laser_y[i] = [4,6]
 
-
     rotate_laser(cangle[frame],frame)
-
 
     ax.cla()
     set_ax()
@@ -87,9 +81,15 @@ def update(frame):
     ax.plot(4,4,marker=(3,0,180 + cangle[frame]),markersize=50)
     ax.plot(x_line,y_line)
     for i in range(10):
-        plotlaser_x = [laser_x[i][0],laser_rotate[i][0]]
-        plotlaser_y = [laser_y[i][0],laser_rotate[i][1]]
+        plotlaser_x = [laser_x[i][0] + laser_replace[i][0],laser_rotate[i][0] + laser_replace[i][0]]
+        plotlaser_y = [laser_y[i][0] + laser_replace[i][1],laser_rotate[i][1] + laser_replace[i][1]]
 
+        print(laser_replace[i])
+        print(laser_x[i],laser_y[i])
+        print(laser_rotate[i])
+        print(plotlaser_x)
+        print(plotlaser_y)
+        print('\n')
         ax.plot(plotlaser_x,plotlaser_y)
 
 
@@ -125,7 +125,7 @@ laser_rotate = [[0] * 2 for i in range(10)]
 
 laser_replace = [[0] * 2 for i in range(10)]
 
-cangle = [0,30,60,90,120,150.180,210,240,270,300]
+cangle = [30,60,90,120,150.180,210,240,270,300,330]
 
 canvas = FigureCanvasTkAgg(fig, master=root)
 canvas.get_tk_widget().pack(side='left')
