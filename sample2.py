@@ -156,7 +156,7 @@ set_label()
 
 
 
-ani = FuncAnimation(fig,update,frames=10,interval=5000)
+ani = FuncAnimation(fig,update,frames=3,interval=100)
 
 button = tk.Button(master=root,
                    text="NIT SUZUKA",
